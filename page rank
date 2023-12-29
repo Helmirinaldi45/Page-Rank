@@ -1,0 +1,32 @@
+import numpy as np
+
+# Step 1: Create a list of 100 sentences
+sentences = ["Sentence 1", "Sentence 2", ..., "Sentence 100"]
+
+# Step 2: Create a dictionary to store outgoing links
+outgoing_links = {sentence: [] for sentence in sentences}
+
+# Step 3: Initialize PageRank scores
+pagerank_scores = {sentence: 1 for sentence in sentences}
+
+# Step 4: Define damping factor
+damping_factor = 0.85
+
+# Step 5: Perform PageRank iterations
+convergence_threshold = 0.1
+converged = False
+
+while not converged:
+    new_pagerank_scores = {}
+    for sentence in sentences:
+        incoming_links = [s for s in sentences if sentence in outgoing_links[s]]
+        contribution = sum(pagerank_scores[link] / len(outgoing_links[link]) for link in incoming_links)
+        new_pagerank_scores[sentence] = (1 - damping_factor) + damping_factor * contribution
+
+    # Step 6: Check for convergence
+    converged = np.allclose(list(pagerank_scores.values()), list(new_pagerank_scores.values()), atol=convergence_threshold)
+    pagerank_scores = new_pagerank_scores
+
+# Step 6: Sort sentences based on PageRank scores
+sorted_sentences = sorted(sentences, key=lambda s: pagerank_scores[s], reverse=True)
+print(sorted_sentences) 
